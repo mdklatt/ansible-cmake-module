@@ -1,0 +1,5 @@
+## Python requirements for using the cmake module.
+##
+##    pip install --requirement=test/requirements.txt
+##
+ansible>=2.0.2
