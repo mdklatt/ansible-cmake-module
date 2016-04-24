@@ -1,0 +1,21 @@
+## Travis CI configuration for the ansible-cmake-module library.
+##
+##  <https://travis-ci.org/mdklatt/ansible-cmake-module>
+##
+language: python
+
+python:
+  - "2.7"
+
+branches:
+  only:
+    - master
+    - dev
+
+sudo: false
+
+install:
+  - pip install -r requirements.txt -r requirements-test.txt
+
+script:
+  - py.test --verbose test/
