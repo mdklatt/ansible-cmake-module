@@ -1,25 +1,19 @@
 """ Test suite for the the cmake module.
 
 The script can be executed on its own or incorporated into a larger test suite.
-However the tests are run, be aware of which version of the module is actually
-being tested. If the library is installed in site-packages, that version takes
-precedence over the version in this project directory. Use a virtualenv test
-environment or setuptools develop mode to test against the development version.
+The ANSIBLE_LIBRARY environment variable must include lib/, and pytest must be
+run with `--ansible-host-pattern=localhost`.
 
 """
-from json import loads
-
 import pytest
-from cmake import main
 
 
-def test_cmake(capsys):
-    """ Test the cmake script.
+def test_cmake(ansible_module):
+    """ Test the cmake module.
 
     """
-    assert 1 == main()
-    stdout, _ = capsys.readouterr()
-    assert {"failed": True, "msg": "not implemented"} == loads(stdout)
+    result = ansible_module.cmake()
+    assert u"not implemented" == result["localhost"]["msg"]
     return
 
 

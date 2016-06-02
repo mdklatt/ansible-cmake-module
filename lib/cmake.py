@@ -1,10 +1,9 @@
-#!/usr/bin/python
 """ Ansible module for building CMake projects.
 
 """
 from __future__ import print_function
 
-from json import dumps
+from ansible.module_utils.basic import AnsibleModule
 
 
 __all__ = "main",
@@ -14,8 +13,8 @@ def main():
     """ Execute the module.
 
     """
-    print(dumps({"failed": True, "msg": "not implemented"}))
-    return 1
+    module = AnsibleModule({})
+    module.fail_json(msg="not implemented")  # calls exit(1)
 
 
 # Make the module executable.
