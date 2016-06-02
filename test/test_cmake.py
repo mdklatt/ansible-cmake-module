@@ -8,24 +8,18 @@ environment or setuptools develop mode to test against the development version.
 
 """
 from json import loads
-from os.path import dirname
-from os.path import join
-from subprocess import check_output
-from subprocess import CalledProcessError
 
 import pytest
+from cmake import main
 
 
 def test_cmake(capsys):
     """ Test the cmake script.
 
     """
-    root = dirname(dirname(__file__))
-    with pytest.raises(CalledProcessError) as exinfo:
-        check_output(join(root, "cmake").split())
-    err = exinfo.value
-    assert 1 == err.returncode
-    assert {"failed": True, "msg": "not implemented"} == loads(err.output)
+    assert 1 == main()
+    stdout, _ = capsys.readouterr()
+    assert {"failed": True, "msg": "not implemented"} == loads(stdout)
     return
 
 
