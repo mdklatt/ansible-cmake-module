@@ -1,6 +1,6 @@
 ## Python requirements for running tests.
 ##
-##   pip install --requirement=test/requirements.txt
+##   pip install --requirement=requirements.txt
 ##
 pytest>=2.9
 pytest-ansible>=1.3
