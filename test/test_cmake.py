@@ -5,18 +5,28 @@ The ANSIBLE_LIBRARY environment variable must include lib/, and pytest must be
 run with `--ansible-host-pattern=localhost`.
 
 """
+from os.path import abspath
+from os.path import dirname
+from os.path import join
+from subprocess import call
+
 import pytest
 
 
-@pytest.mark.parametrize("build", ("Debug", "Release", "RelWithDebInfo", "MinSizeRel"))
-def test_args(ansible_module, build):
-    """ Test module arguments.
+def test_module(tmpdir, ansible_module):
+    """ Test the module functionality.
 
     """
-    # For now, this just tests that each build type is accepted
-    params = {"build_type": build}
+    params = {
+        "executable": "cmake",
+        "build_type": "Debug",
+        "source_dir": dirname(abspath(__file__)),
+        "binary_dir": tmpdir.strpath
+    }
     result = ansible_module.cmake(**params)
-    assert build == result["localhost"]["build_type"]
+    assert not result["localhost"].get("failed", False)
+    cmd = join(result["localhost"]["binary_dir"], "test_cmake")
+    assert 0 == call([cmd])
     return
 
 
