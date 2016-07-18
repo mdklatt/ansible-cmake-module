@@ -25,7 +25,7 @@ def test_module(tmpdir, ansible_module):
     }
     result = ansible_module.cmake(**params)
     assert not result["localhost"].get("failed", False)
-    cmd = join(result["localhost"]["binary_dir"], "test_cmake")
+    cmd = join(result["localhost"]["binary_dir"], "test_app")
     assert 0 == call([cmd])
     return
 
