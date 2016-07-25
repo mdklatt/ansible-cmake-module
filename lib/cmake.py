@@ -21,10 +21,9 @@ _ARGS_SPEC = {
         "choices": ["Debug", "Release", "RelWithDebInfo", "MinSizeRel"],
     },
     "binary_dir": {"required": True},
-    "source_dir": {"default": ""},
+    "source_dir": {"default": None},
     "target": {},
     "executable": {"default": "cmake"},
-    "clean_first": {"default": False, "type": "bool"},
     "vars": {"type": "dict"},
 }
 
@@ -49,13 +48,14 @@ def main():
         vars.update(module.params["vars"])
     except TypeError:  # parameter is None
         pass
-    config_args = []
-    for var in vars.iteritems():
-        config_args.extend(("-D", "=".join(var)))
     binary = abspath(module.params["binary_dir"])
-    source = abspath(module.params["source_dir"])
-    config_args.append(source)
-    cmake(config_args)
+    if module.params["source_dir"]:
+        config_args = []
+        for var in vars.iteritems():
+            config_args.extend(("-D", "=".join(var)))
+        source = abspath(module.params["source_dir"])
+        config_args.append(source)
+        cmake(config_args)
     build_args = ["--build", binary]
     if module.params["target"]:
         build_args.extend(("--target", module.params["target"]))
