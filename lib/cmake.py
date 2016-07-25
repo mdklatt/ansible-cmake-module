@@ -20,7 +20,7 @@ _ARGS_SPEC = {
         "default": "Debug",
         "choices": ["Debug", "Release", "RelWithDebInfo", "MinSizeRel"],
     },
-    "binary_dir": {"default": ""},
+    "binary_dir": {"required": True},
     "source_dir": {"default": ""},
     "target": {},
     "executable": {"default": "cmake"},
