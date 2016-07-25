@@ -1,4 +1,6 @@
-""" Ansible module for building CMake projects.
+""" Ansible module for building projects with CMake.
+
+See the DOCUMENTATION and EXAMPLES strings below for more information.
 
 """
 from __future__ import print_function
@@ -12,6 +14,61 @@ from ansible.module_utils.basic import AnsibleModule
 
 
 __all__ = "main",
+
+
+__version__ = "0.1.0dev0"  # PEP 0440 with Semantic Versioning
+
+
+DOCUMENTATION = """
+module: cmake
+short_description: Build a project using CMake.
+notes:
+- U(github.com/mdklatt/ansible-cmake-module)
+version_added: "2.1"
+author: Michael Klatt
+options:
+  build_type:
+    description: CMake build type to use.
+    required: false
+    default: Debug
+    choices: [Debug, Release, RelWithDebInfo, MinSizeRel]
+  binary_dir:
+    description: Destination for binaries.
+    required: true
+  source_dir:
+    description: |
+      Location of C(CMakeLists.txt). This is required the first time a project
+      is built, or use it to tell CMake to regenerate the build files.
+    required: false
+  target:
+    description: The name of the target to build.
+    required: false
+  executable:
+    description: Path to the C(cmake) executable.
+    required: false
+  vars:
+    description: A dictionary of build variables.
+    required: false
+"""  # must be valid YAML
+
+
+EXAMPLES = """
+# Build a project.
+- cmake:
+    source_dir: /path/to/project
+    binary_dir: /path/to/broject/build
+
+# Build and install a built project.
+- cmake:
+    source_dir: /path/to/project
+    binary_dir: /path/to/project/build
+    target: clean
+
+# Clean a built project (source_dir is not required).
+- cmake:
+    binary-dir: /path/to/project/build
+    target: clean
+"""  # plain text
 
 
 _ARGS_SPEC = {
@@ -50,6 +107,7 @@ def main():
         pass
     binary = abspath(module.params["binary_dir"])
     if module.params["source_dir"]:
+        # (Re)generate build files.
         config_args = []
         for var in vars.iteritems():
             config_args.extend(("-D", "=".join(var)))
