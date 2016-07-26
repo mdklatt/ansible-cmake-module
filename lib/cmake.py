@@ -16,7 +16,7 @@ from ansible.module_utils.basic import AnsibleModule
 __all__ = "main",
 
 
-__version__ = "0.1.0dev0"  # PEP 0440 with Semantic Versioning
+__version__ = "0.1.0"  # PEP 0440 with Semantic Versioning
 
 
 DOCUMENTATION = """
