@@ -17,7 +17,7 @@ from ansible.module_utils.basic import AnsibleModule
 __all__ = "main",
 
 
-__version__ = "0.1.1dev0"  # PEP 0440 with Semantic Versioning
+__version__ = "0.1.1dev1"  # PEP 0440 with Semantic Versioning
 
 
 DOCUMENTATION = """
@@ -107,7 +107,9 @@ def main():
             module.fail_json(msg=stderr, stdout=stdout, rc=process.returncode)
         return
 
-    module = AnsibleModule(_ARGS_SPEC, supports_check_mode=False)
+    module = AnsibleModule(_ARGS_SPEC, supports_check_mode=True)
+    if module.check_mode:
+        module.exit_json(changed=glob(module.params["creates"]))
     if glob(module.params["creates"]):
         # This checks the existence of anything with the given name, not just a
         # file, so it's not limited to checking for an executable.
