@@ -42,7 +42,7 @@ def test_build(tmpdir, ansible_module):
 def test_creates(tmpdir, ansible_module):
     """ Test a build using the creates option.
 
-    This relies on the executable created by test_build().
+    This depends on the existence of the executable created by test_build().
 
     """
     params = {

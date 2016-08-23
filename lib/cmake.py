@@ -17,7 +17,7 @@ from ansible.module_utils.basic import AnsibleModule
 __all__ = "main",
 
 
-__version__ = "0.1.1dev1"  # PEP 0440 with Semantic Versioning
+__version__ = "0.1.1dev2"  # PEP 0440 with Semantic Versioning
 
 
 DOCUMENTATION = """
@@ -107,32 +107,39 @@ def main():
             module.fail_json(msg=stderr, stdout=stdout, rc=process.returncode)
         return
 
-    module = AnsibleModule(_ARGS_SPEC, supports_check_mode=True)
-    if module.check_mode:
-        module.exit_json(changed=glob(module.params["creates"]))
-    if glob(module.params["creates"]):
-        # This checks the existence of anything with the given name, not just a
-        # file, so it's not limited to checking for an executable.
-        module.exit_json(changed=False, rc=0, **module.params)
-    vars = {"CMAKE_BUILD_TYPE": module.params["build_type"]}
-    try:
-        vars.update(module.params["vars"])
-    except TypeError:  # parameter is None
-        pass
-    binary = abspath(module.params["binary_dir"])
-    if module.params["source_dir"]:
-        # (Re)generate build files.
-        config_args = []
+    def config():
+        """ Execute the CMake config step. """
+        args = []
         for var in vars.iteritems():
-            config_args.extend(("-D", "=".join(var)))
+            args.extend(("-D", "=".join(var)))
         source = abspath(module.params["source_dir"])
-        config_args.append(source)
-        cmake(config_args)
-    build_args = ["--build", binary]
-    if module.params["target"]:
-        build_args.extend(("--target", module.params["target"]))
-    cmake(build_args)
-    module.exit_json(changed=True, rc=0, **module.params)  # calls sys.exit(0)
+        args.append(source)
+        cmake(args)
+        return
+
+    def build():
+        """ Execute the CMake build step. """
+        args = ["--build", binary]
+        if module.params["target"]:
+            args.extend(("--target", module.params["target"]))
+        cmake(args)
+        return
+
+    module = AnsibleModule(_ARGS_SPEC, supports_check_mode=True)
+    required = not glob(module.params["creates"])
+    if module.check_mode:
+        module.exit_json(changed=required)  # calls exit(0)
+    if required:
+        binary = abspath(module.params["binary_dir"])
+        vars = {"CMAKE_BUILD_TYPE": module.params["build_type"]}
+        try:
+            vars.update(module.params["vars"])
+        except TypeError:  # parameter is None
+            pass
+        if module.params["source_dir"]:
+            config()
+        build()
+    module.exit_json(changed=required, rc=0, **module.params)  # calls exit(0)
 
 
 # Make the module executable.
