@@ -39,6 +39,25 @@ def test_build(tmpdir, ansible_module):
     return
 
 
+def test_creates(tmpdir, ansible_module):
+    """ Test a build using the creates option.
+
+    This relies on the executable created by test_build().
+
+    """
+    params = {
+        "executable": "cmake",
+        "build_type": "Debug",
+        "source_dir": dirname(abspath(__file__)),
+        "binary_dir": tmpdir.strpath,
+        "creates": tmpdir.join("test_app").strpath
+    }
+    result = ansible_module.cmake(**params)
+    assert not result["localhost"].get("failed", False)
+    assert not result["localhost"]["changed"]
+    return
+
+
 def test_clean(tmpdir, ansible_module):
     """ Test a build with a target.
 

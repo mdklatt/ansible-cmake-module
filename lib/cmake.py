@@ -5,6 +5,7 @@ See the DOCUMENTATION and EXAMPLES strings below for more information.
 """
 from __future__ import print_function
 
+from glob import glob
 from os.path import abspath
 from subprocess import Popen
 from subprocess import PIPE
@@ -16,7 +17,7 @@ from ansible.module_utils.basic import AnsibleModule
 __all__ = "main",
 
 
-__version__ = "0.1.0"  # PEP 0440 with Semantic Versioning
+__version__ = "0.1.1dev0"  # PEP 0440 with Semantic Versioning
 
 
 DOCUMENTATION = """
@@ -43,6 +44,11 @@ options:
   target:
     description: The name of the target to build.
     required: false
+  creates:
+    description: |
+      If the given path exists (wildcards are allowed), the CMake command will
+      not be executed.
+    required: false
   executable:
     description: Path to the C(cmake) executable.
     required: false
@@ -53,16 +59,17 @@ options:
 
 
 EXAMPLES = """
-# Build a project.
+# Build a binary.
 - cmake:
     source_dir: /path/to/project
     binary_dir: /path/to/broject/build
 
-# Build and install a built project.
+# Build and install a binary if it doesn't already exist.
 - cmake:
     source_dir: /path/to/project
     binary_dir: /path/to/project/build
-    target: clean
+    target: install
+    creates: /path/to/installed/binary
 
 # Clean a built project (source_dir is not required).
 - cmake:
@@ -80,6 +87,7 @@ _ARGS_SPEC = {
     "binary_dir": {"required": True},
     "source_dir": {"default": None},
     "target": {},
+    "creates": {"default": ""},  # empty path never exists
     "executable": {"default": "cmake"},
     "vars": {"type": "dict"},
 }
@@ -100,6 +108,10 @@ def main():
         return
 
     module = AnsibleModule(_ARGS_SPEC, supports_check_mode=False)
+    if glob(module.params["creates"]):
+        # This checks the existence of anything with the given name, not just a
+        # file, so it's not limited to checking for an executable.
+        module.exit_json(changed=False, rc=0, **module.params)
     vars = {"CMAKE_BUILD_TYPE": module.params["build_type"]}
     try:
         vars.update(module.params["vars"])
