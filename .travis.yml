@@ -5,26 +5,26 @@
 language: python
 
 python:
-- "2.7"
+  - "2.7"
 
 branches:
   only:
-  - master
-  - dev
+    - master
+    - dev
 
 sudo: false
 
 addons:
   apt:  # lint.travis-ci.org doesn't recognize this yet, but it's valid
     packages:
-    - cmake
+      - cmake
 
 install:
-- pip install -r requirements.txt -r test/requirements.txt
+  - pip install -r requirements.txt -r test/requirements.txt
 
 env:
-- ANSIBLE_LIBRARY=lib
+  - ANSIBLE_LIBRARY=lib
 
 script:
-- cmake --version
-- py.test --verbose --ansible-host-pattern=localhost test/
+  - cmake --version
+  - pytest --verbose --ansible-host-pattern=localhost test/

@@ -2,5 +2,5 @@
 ##
 ##   pip install --requirement=requirements.txt
 ##
-pytest>=2.9
+pytest>=3.0
 pytest-ansible>=1.3
