@@ -17,7 +17,7 @@ from ansible.module_utils.basic import AnsibleModule
 __all__ = "main",
 
 
-__version__ = "0.1.1"  # PEP 0440 with Semantic Versioning
+__version__ = "0.1.2dev0"  # PEP 0440 with Semantic Versioning
 
 
 DOCUMENTATION = """
@@ -41,6 +41,9 @@ options:
       Location of C(CMakeLists.txt). This is required the first time a project
       is built, or use it to tell CMake to regenerate the build files.
     required: false
+  cache_vars:
+    description: A dictionary of cache variables to define.
+    required: false
   target:
     description: The name of the target to build.
     required: false
@@ -51,9 +54,6 @@ options:
     required: false
   executable:
     description: Path to the C(cmake) executable.
-    required: false
-  vars:
-    description: A dictionary of build variables.
     required: false
 """  # must be valid YAML
 
@@ -73,7 +73,7 @@ EXAMPLES = """
 
 # Clean a built project (source_dir is not required).
 - cmake:
-    binary-dir: /path/to/project/build
+    binary_dir: /path/to/project/build
     target: clean
 """  # plain text
 
@@ -86,10 +86,10 @@ _ARGS_SPEC = {
     },
     "binary_dir": {"required": True},
     "source_dir": {"default": None},
+    "cache_vars": {"type": "dict"},
     "target": {},
     "creates": {"default": ""},  # empty path never exists
     "executable": {"default": "cmake"},
-    "vars": {"type": "dict"},
 }
 
 
@@ -110,7 +110,7 @@ def main():
     def config():
         """ Execute the CMake config step. """
         args = []
-        for var in vars.iteritems():
+        for var in cache_vars.iteritems():
             args.extend(("-D", "=".join(var)))
         source = abspath(module.params["source_dir"])
         args.append(source)
@@ -131,9 +131,9 @@ def main():
         module.exit_json(changed=required)  # calls exit(0)
     if required:
         binary = abspath(module.params["binary_dir"])
-        vars = {"CMAKE_BUILD_TYPE": module.params["build_type"]}
+        cache_vars = {"CMAKE_BUILD_TYPE": module.params["build_type"]}
         try:
-            vars.update(module.params["vars"])
+            cache_vars.update(module.params["cache_vars"])
         except TypeError:  # parameter is None
             pass
         if module.params["source_dir"]:

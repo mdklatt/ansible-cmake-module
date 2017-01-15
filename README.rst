@@ -14,7 +14,7 @@ Options
 - ``source_dir``: location of ``CMakeLists.txt``
 - ``build_type``: CMake build type; defaults to ``Debug``
 - ``target``: target to build
-- ``vars``: dictionary of build variables
+- ``cache_vars``: dictionary of cache variables to set
 
 
 Notes
