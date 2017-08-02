@@ -1,7 +1,7 @@
 """ Test suite for the the cmake module.
 
 The script can be executed on its own or incorporated into a larger test suite.
-The ANSIBLE_LIBRARY environment variable must include lib/, and pytest must be
+The ANSIBLE_LIBRARY environment variable must include src/, and pytest must be
 run with `--ansible-host-pattern=localhost`.
 
 """
