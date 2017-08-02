@@ -1,8 +1,9 @@
 =====
 cmake
 =====
-..  _Ansible: http://docs.ansible.com/ansible
-..  _CMake: https://cmake.org
+
+.. _Ansible: http://docs.ansible.com/ansible
+.. _CMake: https://cmake.org
 
 This is an `Ansible`_ module for building projects using `CMake`_. CMake must
 already be installed on the target machine.
@@ -10,6 +11,7 @@ already be installed on the target machine.
 
 Options
 =======
+
 - ``binary_dir``: destination for binaries (required)
 - ``source_dir``: location of ``CMakeLists.txt``
 - ``build_type``: CMake build type; defaults to ``Debug``
@@ -26,6 +28,7 @@ to regenerate build files.
 
 Installation
 ============
+
 Ansible searches for for modules specified by the ``ANSIBLE_LIBRARY``
 environment variable or the ``library`` paramater in an ``ansible.cfg`` file.
 
@@ -36,7 +39,8 @@ called afterwards.
 
 Testing
 =======
-..  code-block::
+
+.. code-block:: console
 
     $ export ANSIBLE_LIBRARY=lib
     $ pytest --ansible-host-pattern=localhost test/
