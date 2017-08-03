@@ -42,5 +42,5 @@ Testing
 
 .. code-block:: console
 
-    $ export ANSIBLE_LIBRARY=lib
+    $ export ANSIBLE_LIBRARY=src
     $ pytest --ansible-host-pattern=localhost test/
