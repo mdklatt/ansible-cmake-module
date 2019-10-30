@@ -1,8 +1,5 @@
 # Ignore Python build artifacts.
 
-MANIFEST
-build/
-dist/
 *.egg-info/
 *.pyc
 *.pyo
@@ -10,7 +7,7 @@ dist/
 
 # Ignore virtualenv environments.
 
-venv*/
+.venv*/
 
 
 # Ignore Vagrant runtime files.
@@ -24,8 +21,11 @@ venv*/
 .project/
 .pydevproject/
 nbproject/
+*.code-workspace
+.vscode/
 
 
 # Ignore OS metadata files.
 
 .DS_Store
+Thumbs.db

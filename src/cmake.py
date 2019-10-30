@@ -10,14 +10,13 @@ from os.path import abspath
 from subprocess import Popen
 from subprocess import PIPE
 
-
 from ansible.module_utils.basic import AnsibleModule
 
 
 __all__ = "main",
 
 
-__version__ = "0.1.4dev0"  # PEP 0440 with Semantic Versioning
+__version__ = "0.2.0.dev0"  # PEP 0440 with Semantic Versioning
 
 
 DOCUMENTATION = """
@@ -25,7 +24,7 @@ module: cmake
 short_description: Build a project using CMake.
 notes:
 - U(github.com/mdklatt/ansible-cmake-module)
-version_added: "2.1"
+version_added: "2.6"
 author: Michael Klatt
 options:
   build_type:
@@ -110,7 +109,7 @@ def main():
     def config():
         """ Execute the CMake config step. """
         args = []
-        for var in cache_vars.iteritems():
+        for var in cache_vars.items():
             args.extend(("-D", "=".join(var)))
         source = abspath(module.params["source_dir"])
         args.append(source)
@@ -131,7 +130,9 @@ def main():
         module.exit_json(changed=required)  # calls exit(0)
     if required:
         binary = abspath(module.params["binary_dir"])
-        cache_vars = {"CMAKE_BUILD_TYPE": module.params["build_type"]}
+        cache_vars = {
+            "CMAKE_BUILD_TYPE": module.params["build_type"],
+        }
         try:
             cache_vars.update(module.params["cache_vars"])
         except TypeError:  # parameter is None
