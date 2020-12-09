@@ -12,7 +12,7 @@ python:
 
 branches:
   only:
-    - master
+    - main
     - dev
 
 sudo: false
