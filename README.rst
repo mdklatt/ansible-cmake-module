@@ -1,14 +1,14 @@
-=====
+#####
 cmake
-=====
+#####
 
-.. _Ansible: http://docs.ansible.com/ansible
-.. _CMake: https://cmake.org
+|travis.png|
 
 This is an `Ansible`_ module for building projects using `CMake`_. CMake must
 already be installed on the target machine.
 
 
+=======
 Options
 =======
 
@@ -19,13 +19,15 @@ Options
 - ``cache_vars``: dictionary of cache variables to set
 
 
+=====
 Notes
 =====
+
 The ``source_dir`` is required for a new build, or it can be used to tell CMake
 to regenerate build files.
 
 
-
+============
 Installation
 ============
 
@@ -37,10 +39,19 @@ The module can also be distributed with a role by placing it in the role's
 called afterwards.
 
 
+=======
 Testing
 =======
 
 .. code-block:: console
 
     $ export ANSIBLE_LIBRARY=src
-    $ pytest --ansible-host-pattern=localhost test/
+    $ python -m pytest --ansible-host-pattern=localhost test/
+
+
+..  |travis.png| image:: https://travis-ci.org/mdklatt/ansible-cmake-module.svg?branch=main
+    :alt: Travis CI build status
+    :target: `travis`_
+..  _travis: https://travis-ci.org/mdklatt/ansible-cmake-module
+.. _Ansible: http://docs.ansible.com/ansible
+.. _CMake: https://cmake.org
