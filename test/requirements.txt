@@ -2,5 +2,5 @@
 ##
 ##   pip install --requirement=requirements.txt
 ##
-pytest>=4.6.5  # last version that supports Python 2.7
+pytest>=6.1  # last version that supports Python 2.7
 pytest-ansible>=2.2
